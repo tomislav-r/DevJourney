@@ -1,11 +1,18 @@
-<script setup></script>
-
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <div>
+    <h1>{{ title }}</h1>
+
+    <TaskCard />
+
+    <RouterView />
+  </div>
 </template>
+
+<script setup>
+import { RouterView } from 'vue-router'
+import TaskCard from './components/TaskCard.vue'
+
+const title = 'Hello Vue!'
+</script>
 
 <style scoped></style>
