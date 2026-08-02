@@ -1,18 +1,16 @@
 <template>
-  <div>
-    <h1>{{ title }}</h1>
-
-    <TaskCard />
-
-    <RouterView />
-  </div>
+  <RouterView />
+  <SignupForm />
 </template>
 
-<script setup>
+<script>
 import { RouterView } from 'vue-router'
-import TaskCard from './components/TaskCard.vue'
+import SignupForm from './components/SignupForm.vue'
 
-const title = 'Hello Vue!'
+export default {
+  name: 'App',
+  components: { SignupForm, RouterView },
+}
 </script>
 
-<style scoped></style>
+<style></style>
