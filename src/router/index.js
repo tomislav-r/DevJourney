@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import DashboardView from '@/views/DashboardView.vue'
+import NotFoundView from '@/views/NotFoundView.vue'
 import ProjectDetailsView from '@/views/ProjectDetailsView.vue'
 
 const router = createRouter({
@@ -32,6 +33,12 @@ const router = createRouter({
       path: '/projects/:id',
       name: 'project-details',
       component: ProjectDetailsView,
+    },
+    {
+      path: '/catchAll(.*)',
+      name: 'NotFound',
+      component: NotFoundView,
+      redirect: '/login',
     },
   ],
 })

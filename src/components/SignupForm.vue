@@ -1,14 +1,20 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <label for="email">Email:</label>
-    <input type="email" required v-model="email" />
+    <input id="email" v-model.trim="email" type="email" required />
 
     <label for="password">Password:</label>
-    <input type="password" required v-model="password" />
-    <div v-if="passwordError" class="error">{{ passwordError }}</div>
+    <input id="password" v-model="password" type="password" required />
+
+    <label for="confirmPassword">Confirm password:</label>
+    <input id="confirmPassword" v-model="confirmPassword" type="password" required />
+
+    <div v-if="passwordError" class="error">
+      {{ passwordError }}
+    </div>
 
     <label for="role">Role:</label>
-    <select id="role" v-model="role">
+    <select id="role" v-model="role" required>
       <option value="">Select a role</option>
       <option value="programmer">Programmer</option>
       <option value="artist">Artist</option>
@@ -16,17 +22,20 @@
     </select>
 
     <div class="submit">
-      <button>Create an Account</button>
+      <button type="submit">Create an Account</button>
     </div>
   </form>
 </template>
 
 <script>
 export default {
+  name: 'SignUpForm',
+
   data() {
     return {
       email: '',
       password: '',
+      confirmPassword: '',
       role: '',
       passwordError: '',
     }
@@ -34,22 +43,28 @@ export default {
 
   methods: {
     handleSubmit() {
-      this.passwordError =
-        this.password.length > 5 ? '' : 'Password must be at least 5 characters long.'
+      this.passwordError = ''
 
-      if (!this.passwordError) {
-        console.log('Form submitted:', {
-          email: this.email,
-          password: this.password,
-          role: this.role,
-        })
+      if (this.password.length < 6) {
+        this.passwordError = 'Password must be at least 6 characters long.'
+        return
       }
+
+      if (this.password !== this.confirmPassword) {
+        this.passwordError = 'Passwords do not match.'
+        return
+      }
+
+      console.log('Form submitted:', {
+        email: this.email,
+        role: this.role,
+      })
     },
   },
 }
 </script>
 
-<style>
+<style scoped>
 form {
   max-width: 420px;
   margin: 30px auto;
@@ -62,7 +77,7 @@ form {
 label {
   color: #aaa;
   display: inline-block;
-  margin: 0px;
+  margin-top: 15px;
   font-size: 0.8em;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -76,7 +91,7 @@ select {
   width: 100%;
   box-sizing: border-box;
   border: none;
-  border-bottom: 1 px solid #ddd;
+  border-bottom: 1px solid #ddd;
   color: #555;
 }
 
@@ -87,6 +102,7 @@ button {
   margin-top: 20px;
   color: white;
   border-radius: 20px;
+  cursor: pointer;
 }
 
 .error {
