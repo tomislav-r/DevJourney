@@ -35,10 +35,9 @@ const router = createRouter({
       component: ProjectDetailsView,
     },
     {
-      path: '/catchAll(.*)',
-      name: 'NotFound',
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
       component: NotFoundView,
-      redirect: '/login',
     },
   ],
 })

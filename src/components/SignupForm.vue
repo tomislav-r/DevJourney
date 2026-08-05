@@ -22,12 +22,16 @@
     </select>
 
     <div class="submit">
-      <button type="submit">Create an Account</button>
+      <button type="submit" :disabled="isLoading">
+        {{ isLoading ? 'Creating account...' : 'Create an Account' }}
+      </button>
     </div>
   </form>
 </template>
 
 <script>
+import { registerUser } from '@/services/authService'
+
 export default {
   name: 'SignUpForm',
 
@@ -38,12 +42,15 @@ export default {
       confirmPassword: '',
       role: '',
       passwordError: '',
+      firebaseError: '',
+      isLoading: false,
     }
   },
 
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
       this.passwordError = ''
+      this.firebaseError = ''
 
       if (this.password.length < 6) {
         this.passwordError = 'Password must be at least 6 characters long.'
@@ -55,10 +62,34 @@ export default {
         return
       }
 
-      console.log('Form submitted:', {
-        email: this.email,
-        role: this.role,
-      })
+      if (!this.role) {
+        this.firebaseError = 'Please select a role.'
+        return
+      }
+
+      this.isLoading = true
+
+      try {
+        const user = await registerUser(this.email, this.password, this.role)
+
+        console.log('Registered user:', user.uid)
+
+        this.$router.push('/dashboard')
+      } catch (error) {
+        console.error(error)
+
+        if (error.code === 'auth/email-already-in-use') {
+          this.firebaseError = 'An account with this email already exists.'
+        } else if (error.code === 'auth/invalid-email') {
+          this.firebaseError = 'The email address is not valid.'
+        } else if (error.code === 'auth/weak-password') {
+          this.firebaseError = 'The password is not strong enough.'
+        } else {
+          this.firebaseError = 'Registration failed. Please try again.'
+        }
+      } finally {
+        this.isLoading = false
+      }
     },
   },
 }
