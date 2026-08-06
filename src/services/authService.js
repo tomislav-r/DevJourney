@@ -13,3 +13,9 @@ export async function registerUser(email, password, role) {
 
   return user
 }
+
+export async function loginUser(email, password) {
+  const userCredential = await projectAuth.signInWithEmailAndPassword(email, password)
+
+  return userCredential.user
+}
